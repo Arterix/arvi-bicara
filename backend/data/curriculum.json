@@ -1,0 +1,868 @@
+{
+  "topics": [
+    {
+      "id": "fruits",
+      "name": "Fruits & Food",
+      "name_id": "Buah & Makanan",
+      "icon": "Apple",
+      "color": "rose",
+      "items": [
+        {
+          "id": "apple",
+          "word": "Apple",
+          "phonetic": "/ˈæp.əl/",
+          "spelling": "A - P - P - L - E",
+          "meaning_id": "Apel",
+          "emoji": "🍎",
+          "example_en": "I eat a sweet red apple.",
+          "example_id": "Aku makan sebuah apel merah yang manis.",
+          "tips": "Buka mulut lebar di awal kata 'æ' lalu akhiri dengan 'pel'."
+        },
+        {
+          "id": "banana",
+          "word": "Banana",
+          "phonetic": "/bəˈnæn.ə/",
+          "spelling": "B - A - N - A - N - A",
+          "meaning_id": "Pisang",
+          "emoji": "🍌",
+          "example_en": "Monkeys love to eat banana.",
+          "example_id": "Monyet suka makan pisang.",
+          "tips": "Tekankan suku kata kedua: buh-NAA-nuh."
+        },
+        {
+          "id": "orange",
+          "word": "Orange",
+          "phonetic": "/ˈɒr.ɪndʒ/",
+          "spelling": "O - R - A - N - G - E",
+          "meaning_id": "Jeruk",
+          "emoji": "🍊",
+          "example_en": "Orange is fresh and juicy.",
+          "example_id": "Jeruk itu segar dan banyak airnya.",
+          "tips": "Ucapkan akhiran 'ge' dengan bunyi 'j' yang lembut."
+        },
+        {
+          "id": "grape",
+          "word": "Grape",
+          "phonetic": "/ɡreɪp/",
+          "spelling": "G - R - A - P - E",
+          "meaning_id": "Anggur",
+          "emoji": "🍇",
+          "example_en": "Purple grapes are sweet.",
+          "example_id": "Anggur ungu rasanya manis.",
+          "tips": "Bunyikan 'ay' di tengah kata, seperti 'greyp'."
+        },
+        {
+          "id": "watermelon",
+          "word": "Watermelon",
+          "phonetic": "/ˈwɔː.təˌmel.ən/",
+          "spelling": "W - A - T - E - R - M - E - L - O - N",
+          "meaning_id": "Semangka",
+          "emoji": "🍉",
+          "example_en": "Watermelon is cold and sweet.",
+          "example_id": "Semangka dingin dan manis.",
+          "tips": "Gabungan kata 'water' dan 'melon'."
+        },
+        {
+          "id": "mango",
+          "word": "Mango",
+          "phonetic": "/ˈmæŋ.ɡəʊ/",
+          "spelling": "M - A - N - G - O",
+          "meaning_id": "Mangga",
+          "emoji": "🥭",
+          "example_en": "Yellow mango is very sweet.",
+          "example_id": "Mangga kuning rasanya sangat manis.",
+          "tips": "Ucapkan 'mang-go' dengan vokal 'o' bulat."
+        },
+        {
+          "id": "strawberry",
+          "word": "Strawberry",
+          "phonetic": "/ˈstrɔː.bər.i/",
+          "spelling": "S - T - R - A - W - B - E - R - R - Y",
+          "meaning_id": "Stroberi",
+          "emoji": "🍓",
+          "example_en": "The strawberry is red and cute.",
+          "example_id": "Stroberi itu merah dan lucu.",
+          "tips": "Awali dengan 'straw' lalu 'be-ri'."
+        },
+        {
+          "id": "bread",
+          "word": "Bread",
+          "phonetic": "/bred/",
+          "spelling": "B - R - E - A - D",
+          "meaning_id": "Roti",
+          "emoji": "🍞",
+          "example_en": "I eat bread for breakfast.",
+          "example_id": "Aku makan roti untuk sarapan.",
+          "tips": "Ucapkan 'bred' dengan vokal 'e' pendek."
+        },
+        {
+          "id": "milk",
+          "word": "Milk",
+          "phonetic": "/mɪlk/",
+          "spelling": "M - I - L - K",
+          "meaning_id": "Susu",
+          "emoji": "🥛",
+          "example_en": "Drinking milk makes you strong.",
+          "example_id": "Minum susu membuatmu kuat.",
+          "tips": "Sentuhkan lidah ke langit-langit mulut untuk bunyi 'l-k'."
+        },
+        {
+          "id": "cheese",
+          "word": "Cheese",
+          "phonetic": "/tʃiːz/",
+          "spelling": "C - H - E - E - S - E",
+          "meaning_id": "Keju",
+          "emoji": "🧀",
+          "example_en": "Mice like to eat yummy cheese.",
+          "example_id": "Tikus suka makan keju yang lezat.",
+          "tips": "Tarik senyum saat mengucapkan vokal 'ee'."
+        }
+      ]
+    },
+    {
+      "id": "animals",
+      "name": "Animals & Nature",
+      "name_id": "Hewan & Alam",
+      "icon": "Cat",
+      "color": "amber",
+      "items": [
+        {
+          "id": "cat",
+          "word": "Cat",
+          "phonetic": "/kæt/",
+          "spelling": "C - A - T",
+          "meaning_id": "Kucing",
+          "emoji": "🐱",
+          "example_en": "The little cat says meow.",
+          "example_id": "Kucing kecil itu bersuara meong.",
+          "tips": "Bunyi 'k' tegas di depan dan 't' lembut di belakang."
+        },
+        {
+          "id": "dog",
+          "word": "Dog",
+          "phonetic": "/dɒɡ/",
+          "spelling": "D - O - G",
+          "meaning_id": "Anjing",
+          "emoji": "🐶",
+          "example_en": "The friendly dog wags its tail.",
+          "example_id": "Anjing yang ramah itu mengibaskan ekornya.",
+          "tips": "Bunyi vokal 'o' pendek dan jelas."
+        },
+        {
+          "id": "elephant",
+          "word": "Elephant",
+          "phonetic": "/ˈel.ɪ.fənt/",
+          "spelling": "E - L - E - P - H - A - N - T",
+          "meaning_id": "Gajah",
+          "emoji": "🐘",
+          "example_en": "The elephant has a long trunk.",
+          "example_id": "Gajah memiliki belalai yang panjang.",
+          "tips": "Huruf 'ph' dibaca seperti huruf 'f'."
+        },
+        {
+          "id": "lion",
+          "word": "Lion",
+          "phonetic": "/ˈlaɪ.ən/",
+          "spelling": "L - I - O - N",
+          "meaning_id": "Singa",
+          "emoji": "🦁",
+          "example_en": "The lion is the king of the jungle.",
+          "example_id": "Singa adalah raja hutan.",
+          "tips": "Dibaca 'Lai-yen' dengan jelas."
+        },
+        {
+          "id": "rabbit",
+          "word": "Rabbit",
+          "phonetic": "/ˈræb.ɪt/",
+          "spelling": "R - A - B - B - I - T",
+          "meaning_id": "Kelinci",
+          "emoji": "🐰",
+          "example_en": "The cute white rabbit hops around.",
+          "example_id": "Kelinci putih lucu itu melompat-lompat.",
+          "tips": "Ucapkan 'Raa-bit' dengan ceria."
+        },
+        {
+          "id": "tiger",
+          "word": "Tiger",
+          "phonetic": "/ˈtaɪ.ɡər/",
+          "spelling": "T - I - G - E - R",
+          "meaning_id": "Harimau",
+          "emoji": "🐯",
+          "example_en": "The tiger has black and orange stripes.",
+          "example_id": "Harimau memiliki garis hitam dan oranye.",
+          "tips": "Dibaca 'Tai-ger' dengan tegas."
+        },
+        {
+          "id": "dolphin",
+          "word": "Dolphin",
+          "phonetic": "/ˈdɒl.fɪn/",
+          "spelling": "D - O - L - P - H - I - N",
+          "meaning_id": "Lumba-lumba",
+          "emoji": "🐬",
+          "example_en": "The smart dolphin jumps in the sea.",
+          "example_id": "Lumba-lumba pintar melompat di laut.",
+          "tips": "Huruf 'ph' berbunyi 'f': dol-fin."
+        },
+        {
+          "id": "monkey",
+          "word": "Monkey",
+          "phonetic": "/ˈmʌŋ.ki/",
+          "spelling": "M - O - N - K - E - Y",
+          "meaning_id": "Monyet",
+          "emoji": "🐵",
+          "example_en": "The monkey climbs the high tree.",
+          "example_id": "Monyet memanjat pohon yang tinggi.",
+          "tips": "Vokal pertama berbunyi 'mung-kee'."
+        },
+        {
+          "id": "butterfly",
+          "word": "Butterfly",
+          "phonetic": "/ˈbʌt.ə.flaɪ/",
+          "spelling": "B - U - T - T - E - R - F - L - Y",
+          "meaning_id": "Kupu-kupu",
+          "emoji": "🦋",
+          "example_en": "The colorful butterfly flies on flowers.",
+          "example_id": "Kupu-kupu warna-warni terbang di atas bunga.",
+          "tips": "Gabungan kata 'butter' dan 'fly'."
+        },
+        {
+          "id": "bird",
+          "word": "Bird",
+          "phonetic": "/bɜːd/",
+          "spelling": "B - I - R - D",
+          "meaning_id": "Burung",
+          "emoji": "🐦",
+          "example_en": "The bird sings in the morning.",
+          "example_id": "Burung bernyanyi di pagi hari.",
+          "tips": "Bunyikan 'berd' dengan lembut."
+        }
+      ]
+    },
+    {
+      "id": "colors",
+      "name": "Colors & Shapes",
+      "name_id": "Warna & Bentuk",
+      "icon": "Palette",
+      "color": "emerald",
+      "items": [
+        {
+          "id": "red",
+          "word": "Red",
+          "phonetic": "/red/",
+          "spelling": "R - E - D",
+          "meaning_id": "Merah",
+          "emoji": "🔴",
+          "example_en": "The fire truck is bright red.",
+          "example_id": "Mobil pemadam itu berwarna merah terang.",
+          "tips": "Bunyi 'r' melingkar di lidah, akhiri dengan 'd'."
+        },
+        {
+          "id": "blue",
+          "word": "Blue",
+          "phonetic": "/bluː/",
+          "spelling": "B - L - U - E",
+          "meaning_id": "Biru",
+          "emoji": "🔵",
+          "example_en": "The sky on sunny day is blue.",
+          "example_id": "Langit di hari cerah berwarna biru.",
+          "tips": "Ucapkan 'bloo' panjang dan bulat."
+        },
+        {
+          "id": "yellow",
+          "word": "Yellow",
+          "phonetic": "/ˈjel.əʊ/",
+          "spelling": "Y - E - L - L - O - W",
+          "meaning_id": "Kuning",
+          "emoji": "🟡",
+          "example_en": "The sun is warm and yellow.",
+          "example_id": "Matahari hangat dan berwarna kuning.",
+          "tips": "Awali dengan 'yeh' dan akhiri dengan 'low'."
+        },
+        {
+          "id": "green",
+          "word": "Green",
+          "phonetic": "/ɡriːn/",
+          "spelling": "G - R - E - E - N",
+          "meaning_id": "Hijau",
+          "emoji": "🟢",
+          "example_en": "Trees have fresh green leaves.",
+          "example_id": "Pohon memiliki daun-daun hijau yang segar.",
+          "tips": "Tarik vokal 'ee' panjang: griiin."
+        },
+        {
+          "id": "purple",
+          "word": "Purple",
+          "phonetic": "/ˈpɜː.pəl/",
+          "spelling": "P - U - R - P - L - E",
+          "meaning_id": "Ungu",
+          "emoji": "🟣",
+          "example_en": "I have a lovely purple bag.",
+          "example_id": "Aku punya tas ungu yang indah.",
+          "tips": "Ucapkan 'per-pel' dengan suara dalam."
+        },
+        {
+          "id": "pink",
+          "word": "Pink",
+          "phonetic": "/pɪŋk/",
+          "spelling": "P - I - N - K",
+          "meaning_id": "Merah Muda (Pink)",
+          "emoji": "🌸",
+          "example_en": "The cute flower is pink.",
+          "example_id": "Bunga yang lucu itu berwarna merah muda.",
+          "tips": "Bunyi 'k' di akhir terdengar jelas."
+        },
+        {
+          "id": "circle",
+          "word": "Circle",
+          "phonetic": "/ˈsɜː.kəl/",
+          "spelling": "C - I - R - C - L - E",
+          "meaning_id": "Lingkaran",
+          "emoji": "⭕",
+          "example_en": "A ball is shaped like a circle.",
+          "example_id": "Bola berbentuk seperti lingkaran.",
+          "tips": "Huruf 'c' pertama dibaca 's': ser-kel."
+        },
+        {
+          "id": "square",
+          "word": "Square",
+          "phonetic": "/skweər/",
+          "spelling": "S - Q - U - A - R - E",
+          "meaning_id": "Persegi Kotak",
+          "emoji": "⏹️",
+          "example_en": "The window is a big square.",
+          "example_id": "Jendela itu adalah kotak persegi besar.",
+          "tips": "Bunyikan 'skwer' dengan cepat."
+        },
+        {
+          "id": "triangle",
+          "word": "Triangle",
+          "phonetic": "/ˈtraɪ.æŋ.ɡəl/",
+          "spelling": "T - R - I - A - N - G - L - E",
+          "meaning_id": "Segitiga",
+          "emoji": "🔺",
+          "example_en": "A slice of pizza is a triangle.",
+          "example_id": "Sepotong pizza berbentuk segitiga.",
+          "tips": "Awali 'tri' lalu 'ang-gel'."
+        },
+        {
+          "id": "star",
+          "word": "Star",
+          "phonetic": "/stɑːr/",
+          "spelling": "S - T - A - R",
+          "meaning_id": "Bintang",
+          "emoji": "⭐",
+          "example_en": "You get a shiny gold star!",
+          "example_id": "Kamu mendapatkan bintang emas yang bersinar!",
+          "tips": "Buka mulut lebar untuk bunyi 'staa-r'."
+        }
+      ]
+    },
+    {
+      "id": "numbers",
+      "name": "Numbers & Time",
+      "name_id": "Angka & Waktu",
+      "icon": "Binary",
+      "color": "indigo",
+      "items": [
+        {
+          "id": "one",
+          "word": "One",
+          "phonetic": "/wʌn/",
+          "spelling": "O - N - E",
+          "meaning_id": "Satu (1)",
+          "emoji": "1️⃣",
+          "example_en": "I have one nose.",
+          "example_id": "Aku memiliki satu hidung.",
+          "tips": "Dibaca seperti 'wan'."
+        },
+        {
+          "id": "two",
+          "word": "Two",
+          "phonetic": "/tuː/",
+          "spelling": "T - W - O",
+          "meaning_id": "Dua (2)",
+          "emoji": "2️⃣",
+          "example_en": "I have two eyes to see.",
+          "example_id": "Aku memiliki dua mata untuk melihat.",
+          "tips": "Dibaca 'too' panjang."
+        },
+        {
+          "id": "three",
+          "word": "Three",
+          "phonetic": "/θriː/",
+          "spelling": "T - H - R - E - E",
+          "meaning_id": "Tiga (3)",
+          "emoji": "3️⃣",
+          "example_en": "Three birds are singing.",
+          "example_id": "Tiga burung sedang bernyanyi.",
+          "tips": "Sentuhkan lidah di antara gigi untuk bunyi 'th'."
+        },
+        {
+          "id": "four",
+          "word": "Four",
+          "phonetic": "/fɔːr/",
+          "spelling": "F - O - U - R",
+          "meaning_id": "Empat (4)",
+          "emoji": "4️⃣",
+          "example_en": "A table has four legs.",
+          "example_id": "Meja memiliki empat kaki.",
+          "tips": "Ucapkan 'for' dengan jelas."
+        },
+        {
+          "id": "five",
+          "word": "Five",
+          "phonetic": "/faɪv/",
+          "spelling": "F - I - V - E",
+          "meaning_id": "Lima (5)",
+          "emoji": "5️⃣",
+          "example_en": "I have five fingers on each hand.",
+          "example_id": "Aku punya lima jari di setiap tangan.",
+          "tips": "Akhiri dengan getaran bibir pada bunyi 'v'."
+        },
+        {
+          "id": "six",
+          "word": "Six",
+          "phonetic": "/sɪks/",
+          "spelling": "S - I - X",
+          "meaning_id": "Enam (6)",
+          "emoji": "6️⃣",
+          "example_en": "I have six colorful pencils.",
+          "example_id": "Aku punya enam pensil warna-warni.",
+          "tips": "Bunyi 'ks' terdengar tajam di akhir."
+        },
+        {
+          "id": "seven",
+          "word": "Seven",
+          "phonetic": "/ˈsev.ən/",
+          "spelling": "S - E - V - E - N",
+          "meaning_id": "Tujuh (7)",
+          "emoji": "7️⃣",
+          "example_en": "There are seven days in a week.",
+          "example_id": "Ada tujuh hari dalam satu minggu.",
+          "tips": "Ucapkan 'seh-ven'."
+        },
+        {
+          "id": "eight",
+          "word": "Eight",
+          "phonetic": "/eɪt/",
+          "spelling": "E - I - G - H - T",
+          "meaning_id": "Delapan (8)",
+          "emoji": "8️⃣",
+          "example_en": "An octopus has eight arms.",
+          "example_id": "Gurita memiliki delapan lengan.",
+          "tips": "Ucapkan seperti 'eyt' dengan 't' di akhir."
+        },
+        {
+          "id": "nine",
+          "word": "Nine",
+          "phonetic": "/naɪn/",
+          "spelling": "N - I - N - E",
+          "meaning_id": "Sembilan (9)",
+          "emoji": "9️⃣",
+          "example_en": "Nine balloons fly in the sky.",
+          "example_id": "Sembilan balon terbang di langit.",
+          "tips": "Vokal 'ai' panjang: nain."
+        },
+        {
+          "id": "ten",
+          "word": "Ten",
+          "phonetic": "/ten/",
+          "spelling": "T - E - N",
+          "meaning_id": "Sepuluh (10)",
+          "emoji": "🔟",
+          "example_en": "I can count from one to ten.",
+          "example_id": "Aku bisa berhitung dari satu sampai sepuluh.",
+          "tips": "Ucapkan 'ten' dengan jelas."
+        }
+      ]
+    },
+    {
+      "id": "family",
+      "name": "Family & People",
+      "name_id": "Keluarga & Profesi",
+      "icon": "Users",
+      "color": "sky",
+      "items": [
+        {
+          "id": "father",
+          "word": "Father",
+          "phonetic": "/ˈfɑː.ðər/",
+          "spelling": "F - A - T - H - E - R",
+          "meaning_id": "Ayah",
+          "emoji": "👨",
+          "example_en": "My father is very kind and strong.",
+          "example_id": "Ayahku sangat baik dan kuat.",
+          "tips": "Bunyikan 'th' dengan lidah di antara gigi: faa-ther."
+        },
+        {
+          "id": "mother",
+          "word": "Mother",
+          "phonetic": "/ˈmʌð.ər/",
+          "spelling": "M - O - T - H - E - R",
+          "meaning_id": "Ibu",
+          "emoji": "👩",
+          "example_en": "My mother cooks delicious food.",
+          "example_id": "Ibuku memasak makanan lezat.",
+          "tips": "Ucapkan 'mah-ther'."
+        },
+        {
+          "id": "brother",
+          "word": "Brother",
+          "phonetic": "/ˈbrʌð.ər/",
+          "spelling": "B - R - O - T - H - E - R",
+          "meaning_id": "Saudara Laki-laki",
+          "emoji": "👦",
+          "example_en": "I play football with my brother.",
+          "example_id": "Aku bermain sepak bola bersama saudaraku.",
+          "tips": "Ucapkan 'brah-ther'."
+        },
+        {
+          "id": "sister",
+          "word": "Sister",
+          "phonetic": "/ˈsɪs.tər/",
+          "spelling": "S - I - S - T - E - R",
+          "meaning_id": "Saudara Perempuan",
+          "emoji": "👧",
+          "example_en": "My sister likes to draw pictures.",
+          "example_id": "Saudara perempuanku suka menggambar.",
+          "tips": "Ucapkan 'sis-ter'."
+        },
+        {
+          "id": "teacher",
+          "word": "Teacher",
+          "phonetic": "/ˈtiː.tʃər/",
+          "spelling": "T - E - A - C - H - E - R",
+          "meaning_id": "Guru",
+          "emoji": "👩🏫",
+          "example_en": "Our teacher is smart and patient.",
+          "example_id": "Guru kami pintar dan penyabar.",
+          "tips": "Bunyikan 'ch' lembut di tengah: tee-cher."
+        },
+        {
+          "id": "doctor",
+          "word": "Doctor",
+          "phonetic": "/ˈdɒk.tər/",
+          "spelling": "D - O - C - T - O - R",
+          "meaning_id": "Dokter",
+          "emoji": "🩺",
+          "example_en": "The doctor helps sick people get well.",
+          "example_id": "Dokter menolong orang sakit agar sembuh.",
+          "tips": "Ucapkan 'dok-ter'."
+        },
+        {
+          "id": "police",
+          "word": "Police",
+          "phonetic": "/pəˈliːs/",
+          "spelling": "P - O - L - I - C - E",
+          "meaning_id": "Polisi",
+          "emoji": "👮",
+          "example_en": "The police officer keeps our city safe.",
+          "example_id": "Polisi menjaga kota kita tetap aman.",
+          "tips": "Tekanan di suku kata kedua: puh-LEES."
+        },
+        {
+          "id": "chef",
+          "word": "Chef",
+          "phonetic": "/ʃef/",
+          "spelling": "C - H - E - F",
+          "meaning_id": "Koki / Juru Masak",
+          "emoji": "👨🍳",
+          "example_en": "The chef makes tasty cakes.",
+          "example_id": "Koki membuat kue yang lezat.",
+          "tips": "Huruf 'ch' dibaca 'sh': shef."
+        },
+        {
+          "id": "pilot",
+          "word": "Pilot",
+          "phonetic": "/ˈpaɪ.lət/",
+          "spelling": "P - I - L - O - T",
+          "meaning_id": "Pilot",
+          "emoji": "👨✈️",
+          "example_en": "The pilot flies an airplane in the clouds.",
+          "example_id": "Pilot menerbangkan pesawat di awan.",
+          "tips": "Ucapkan 'pai-let'."
+        },
+        {
+          "id": "baby",
+          "word": "Baby",
+          "phonetic": "/ˈbeɪ.bi/",
+          "spelling": "B - A - B - Y",
+          "meaning_id": "Bayi",
+          "emoji": "👶",
+          "example_en": "The cute baby is smiling happily.",
+          "example_id": "Bayi yang lucu itu tersenyum bahagia.",
+          "tips": "Ucapkan 'bey-bee'."
+        }
+      ]
+    },
+    {
+      "id": "school",
+      "name": "School & Classroom",
+      "name_id": "Sekolah & Kelas",
+      "icon": "GraduationCap",
+      "color": "purple",
+      "items": [
+        {
+          "id": "book",
+          "word": "Book",
+          "phonetic": "/bʊk/",
+          "spelling": "B - O - O - K",
+          "meaning_id": "Buku",
+          "emoji": "📖",
+          "example_en": "I open my English book.",
+          "example_id": "Aku membuka buku Bahasa Inggrisku.",
+          "tips": "Bunyi 'oo' pendek seperti 'buk'."
+        },
+        {
+          "id": "pencil",
+          "word": "Pencil",
+          "phonetic": "/ˈpen.səl/",
+          "spelling": "P - E - N - C - I - L",
+          "meaning_id": "Pensil",
+          "emoji": "✏️",
+          "example_en": "I write with a sharp pencil.",
+          "example_id": "Aku menulis dengan pensil yang tajam.",
+          "tips": "Ucapkan 'pen-sel'."
+        },
+        {
+          "id": "eraser",
+          "word": "Eraser",
+          "phonetic": "/ɪˈreɪ.zər/",
+          "spelling": "E - R - A - S - E - R",
+          "meaning_id": "Penghapus",
+          "emoji": "🧼",
+          "example_en": "Use the eraser to clean your mistakes.",
+          "example_id": "Gunakan penghapus untuk membersihkan kesalahan tulisan.",
+          "tips": "Ucapkan 'ee-rey-zer'."
+        },
+        {
+          "id": "ruler",
+          "word": "Ruler",
+          "phonetic": "/ˈruː.lər/",
+          "spelling": "R - U - L - E - R",
+          "meaning_id": "Penggaris",
+          "emoji": "📏",
+          "example_en": "Draw a straight line with a ruler.",
+          "example_id": "Buat garis lurus menggunakan penggaris.",
+          "tips": "Ucapkan 'roo-ler'."
+        },
+        {
+          "id": "bag",
+          "word": "Bag",
+          "phonetic": "/bæɡ/",
+          "spelling": "B - A - G",
+          "meaning_id": "Tas",
+          "emoji": "🎒",
+          "example_en": "Put your books inside the school bag.",
+          "example_id": "Masukkan buku-bukumu ke dalam tas sekolah.",
+          "tips": "Buka mulut lebar untuk vokal 'a'."
+        },
+        {
+          "id": "desk",
+          "word": "Desk",
+          "phonetic": "/desk/",
+          "spelling": "D - E - S - K",
+          "meaning_id": "Meja Belajar",
+          "emoji": "🪑",
+          "example_en": "Keep your classroom desk clean.",
+          "example_id": "Jaga meja belajarmu tetap bersih.",
+          "tips": "Bunyi 'sk' di akhir terdengar jelas."
+        },
+        {
+          "id": "blackboard",
+          "word": "Blackboard",
+          "phonetic": "/ˈblæk.bɔːd/",
+          "spelling": "B - L - A - C - K - B - O - A - R - D",
+          "meaning_id": "Papan Tulis",
+          "emoji": "📋",
+          "example_en": "The teacher writes on the blackboard.",
+          "example_id": "Guru menulis di papan tulis.",
+          "tips": "Gabungan kata 'black' dan 'board'."
+        },
+        {
+          "id": "library",
+          "word": "Library",
+          "phonetic": "/ˈlaɪ.brər.i/",
+          "spelling": "L - I - B - R - A - R - Y",
+          "meaning_id": "Perpustakaan",
+          "emoji": "📚",
+          "example_en": "We read quietly in the library.",
+          "example_id": "Kami membaca dengan tenang di perpustakaan.",
+          "tips": "Ucapkan 'lai-bre-ri'."
+        }
+      ]
+    },
+    {
+      "id": "actions",
+      "name": "Daily Routines & Verbs",
+      "name_id": "Aktivitas & Kata Kerja",
+      "icon": "Zap",
+      "color": "teal",
+      "items": [
+        {
+          "id": "read",
+          "word": "Read",
+          "phonetic": "/riːd/",
+          "spelling": "R - E - A - D",
+          "meaning_id": "Membaca",
+          "emoji": "📖",
+          "example_en": "I love to read story books.",
+          "example_id": "Aku suka membaca buku cerita.",
+          "tips": "Vokal 'ea' dibaca panjang: riiid."
+        },
+        {
+          "id": "write",
+          "word": "Write",
+          "phonetic": "/raɪt/",
+          "spelling": "W - R - I - T - E",
+          "meaning_id": "Menulis",
+          "emoji": "✍️",
+          "example_en": "I write letters to my friend.",
+          "example_id": "Aku menulis surat untuk temanku.",
+          "tips": "Huruf 'w' di awal tidak dibaca (silent): rait."
+        },
+        {
+          "id": "sing",
+          "word": "Sing",
+          "phonetic": "/sɪŋ/",
+          "spelling": "S - I - N - G",
+          "meaning_id": "Bernyanyi",
+          "emoji": "🎤",
+          "example_en": "Let's sing an English song together!",
+          "example_id": "Ayo kita menyanyikan lagu Bahasa Inggris bersama!",
+          "tips": "Bunyi sengau 'ng' di akhir kata."
+        },
+        {
+          "id": "dance",
+          "word": "Dance",
+          "phonetic": "/dɑːns/",
+          "spelling": "D - A - N - C - E",
+          "meaning_id": "Menari",
+          "emoji": "💃",
+          "example_en": "Children dance with happy smiles.",
+          "example_id": "Anak-anak menari dengan senyuman bahagia.",
+          "tips": "Akhiri dengan bunyi 's' lembut."
+        },
+        {
+          "id": "jump",
+          "word": "Jump",
+          "phonetic": "/dʒʌmp/",
+          "spelling": "J - U - M - P",
+          "meaning_id": "Melompat",
+          "emoji": "🦘",
+          "example_en": "Can you jump high like a frog?",
+          "example_id": "Bisakah kamu melompat tinggi seperti katak?",
+          "tips": "Bunyi 'j' tegas dan akhiri dengan 'mp'."
+        },
+        {
+          "id": "sleep",
+          "word": "Sleep",
+          "phonetic": "/sliːp/",
+          "spelling": "S - L - E - E - P",
+          "meaning_id": "Tidur",
+          "emoji": "😴",
+          "example_en": "It is time to sleep and have sweet dreams.",
+          "example_id": "Saatnya tidur dan bermimpi indah.",
+          "tips": "Vokal 'ee' panjang: sliiip."
+        },
+        {
+          "id": "swim",
+          "word": "Swim",
+          "phonetic": "/swɪm/",
+          "spelling": "S - W - I - M",
+          "meaning_id": "Berenang",
+          "emoji": "🏊",
+          "example_en": "Fish can swim fast in water.",
+          "example_id": "Ikan dapat berenang cepat di dalam air.",
+          "tips": "Ucapkan 'swim' dengan jelas."
+        },
+        {
+          "id": "play",
+          "word": "Play",
+          "phonetic": "/pleɪ/",
+          "spelling": "P - L - A - Y",
+          "meaning_id": "Bermain",
+          "emoji": "⚽",
+          "example_en": "We play together in the playground.",
+          "example_id": "Kita bermain bersama di taman bermain.",
+          "tips": "Ucapkan 'pley'."
+        }
+      ]
+    },
+    {
+      "id": "greetings",
+      "name": "Polite Greetings",
+      "name_id": "Salam & Ungkapan Sopan",
+      "icon": "MessageCircle",
+      "color": "blue",
+      "items": [
+        {
+          "id": "hello",
+          "word": "Hello",
+          "phonetic": "/həˈləʊ/",
+          "spelling": "H - E - L - L - O",
+          "meaning_id": "Halo",
+          "emoji": "👋",
+          "example_en": "Hello! Nice to meet you today.",
+          "example_id": "Halo! Senang bertemu denganmu hari ini.",
+          "tips": "Ucapkan dengan ceria: he-low."
+        },
+        {
+          "id": "good_morning",
+          "word": "Good morning",
+          "phonetic": "/ɡʊd ˈmɔː.nɪŋ/",
+          "spelling": "G - O - O - D  M - O - R - N - I - N - G",
+          "meaning_id": "Selamat Pagi",
+          "emoji": "🌅",
+          "example_en": "Good morning, teacher and friends!",
+          "example_id": "Selamat pagi, guru dan teman-teman!",
+          "tips": "Ucapkan dengan senyuman."
+        },
+        {
+          "id": "thank_you",
+          "word": "Thank you",
+          "phonetic": "/θæŋk juː/",
+          "spelling": "T - H - A - N - K  Y - O - U",
+          "meaning_id": "Terima Kasih",
+          "emoji": "🙏",
+          "example_en": "Thank you for helping me.",
+          "example_id": "Terima kasih telah membantuku.",
+          "tips": "Sentuhkan lidah di gigi untuk bunyi 'th'."
+        },
+        {
+          "id": "you_are_welcome",
+          "word": "You are welcome",
+          "phonetic": "/juː ɑːr ˈwel.kəm/",
+          "spelling": "Y - O - U  A - R - E  W - E - L - C - O - M - E",
+          "meaning_id": "Sama-sama",
+          "emoji": "😊",
+          "example_en": "You are welcome, my dear friend.",
+          "example_id": "Sama-sama, sahabatku.",
+          "tips": "Jawaban sopan setelah seseorang mengucapkan terima kasih."
+        },
+        {
+          "id": "please",
+          "word": "Please",
+          "phonetic": "/pliːz/",
+          "spelling": "P - L - E - A - S - E",
+          "meaning_id": "Tolong / Silakan",
+          "emoji": "🤝",
+          "example_en": "Please open your book to page five.",
+          "example_id": "Tolong buka bukumu ke halaman lima.",
+          "tips": "Ucapkan 'pleez' dengan ramah."
+        },
+        {
+          "id": "goodbye",
+          "word": "Goodbye",
+          "phonetic": "/ɡʊdˈbaɪ/",
+          "spelling": "G - O - O - D - B - Y - E",
+          "meaning_id": "Selamat Tinggal",
+          "emoji": "👋",
+          "example_en": "Goodbye, see you tomorrow!",
+          "example_id": "Selamat tinggal, sampai jumpa besok!",
+          "tips": "Ucapkan 'gud-bai' sambil melambaikan tangan."
+        }
+      ]
+    }
+  ]
+}
