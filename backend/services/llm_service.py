@@ -1,9 +1,12 @@
 import json
 import os
 import re
+from dotenv import load_dotenv
 from openai import OpenAI
 from pathlib import Path
 import eng_to_ipa as ipa
+
+load_dotenv()
 
 # Load prompts and curriculum
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
@@ -31,20 +34,53 @@ class LLMService:
         try:
             self.client = OpenAI(
                 api_key=self.api_key,
-                base_url=self.base_url
+                base_url=self.base_url,
+                timeout=2.5
             )
         except Exception:
             self.client = None
 
     def _search_curriculum(self, text: str):
-        """Find matching curriculum word in the knowledge bank."""
-        words = re.findall(r'\b[a-zA-Z]+\b', text.lower())
+        """Find matching curriculum word in the knowledge bank using bilingual tokens & phrases."""
+        if not text:
+            return None, None
+            
+        clean_text = text.lower()
+        words = re.findall(r'\b[a-zA-Z0-9]+\b', clean_text)
+        
+        # 1. Exact word / ID phrase match
         for topic in CURRICULUM_TOPICS:
             for item in topic.get("items", []):
                 item_word = item.get("word", "").lower()
-                item_meaning = item.get("meaning_id", "").lower()
-                if item_word in words or item_meaning in text.lower():
+                item_id = item.get("id", "").lower().replace("_", " ")
+                
+                # Multi-word English phrases
+                if " " in item_word and item_word in clean_text:
                     return item, topic
+                if " " in item_id and item_id in clean_text:
+                    return item, topic
+                    
+                # Single-word English token matching
+                if item_word in words or item.get("id", "").lower() in words:
+                    return item, topic
+
+        # 2. Indonesian meaning & synonym token match
+        for topic in CURRICULUM_TOPICS:
+            for item in topic.get("items", []):
+                meaning_raw = item.get("meaning_id", "").lower()
+                meaning_clean = re.sub(r'[()\/]', ' ', meaning_raw)
+                meaning_tokens = [w for w in meaning_clean.split() if len(w) >= 3]
+                
+                for mt in meaning_tokens:
+                    if mt in words:
+                        return item, topic
+                        
+                # Multi-word Indonesian meaning (e.g. "selamat pagi", "merah muda")
+                phrases = [p.strip() for p in re.split(r'[/()]', meaning_raw) if " " in p.strip() and len(p.strip()) >= 4]
+                for phrase in phrases:
+                    if phrase in clean_text:
+                        return item, topic
+                        
         return None, None
 
     async def generate_response(self, message: str, grade_level: str = "sd_low", history: list = None) -> dict:

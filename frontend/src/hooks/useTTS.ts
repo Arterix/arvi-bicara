@@ -8,7 +8,15 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 export function useTTS() {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const safetyTimerRef = useRef<any>(null);
   const { setIsSpeaking, setEmotion } = useAppStore();
+
+  const resetSpeakingState = useCallback(() => {
+    if (safetyTimerRef.current) clearTimeout(safetyTimerRef.current);
+    setIsPlaying(false);
+    setIsSpeaking(false);
+    setEmotion('happy');
+  }, [setIsSpeaking, setEmotion]);
 
   const speakText = useCallback(
     async (
@@ -25,18 +33,30 @@ export function useTTS() {
         audioRef.current.pause();
         audioRef.current.currentTime = 0;
       }
+      if (safetyTimerRef.current) clearTimeout(safetyTimerRef.current);
 
       setIsPlaying(true);
       setIsSpeaking(true);
       setEmotion('speaking');
 
-      // 1. Primary: High-fidelity Kokoro / Neural TTS via Backend
+      // Safety watchdog timer (max 6s or based on text length)
+      const maxDuration = Math.max(3500, Math.min(10000, text.split(' ').length * 600));
+      safetyTimerRef.current = setTimeout(() => {
+        resetSpeakingState();
+      }, maxDuration);
+
+      // 1. Primary: High-fidelity Kokoro / Neural TTS via Backend with fast 1.5s timeout
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 1500);
+
         const res = await fetch(`${API_BASE_URL}/api/tts`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ text, voice, speed }),
+          signal: controller.signal,
         });
+        clearTimeout(timeoutId);
 
         if (res.ok) {
           const blob = await res.blob();
@@ -45,14 +65,11 @@ export function useTTS() {
           audioRef.current = audio;
 
           audio.onended = () => {
-            setIsPlaying(false);
-            setIsSpeaking(false);
-            setEmotion('happy');
+            resetSpeakingState();
             URL.revokeObjectURL(url);
           };
 
           audio.onerror = () => {
-            // Secondary fallback: browser Web Speech synthesis
             speakWithBrowserSynthesis(text, lang);
           };
 
@@ -60,20 +77,18 @@ export function useTTS() {
           return;
         }
       } catch (err) {
-        console.warn('[useTTS] Backend Kokoro TTS failed, falling back to browser synthesis:', err);
+        // Fast fallback to instant browser speech synthesis
       }
 
       // 2. Secondary fallback: Web Speech API synthesis
       speakWithBrowserSynthesis(text, lang);
     },
-    [setIsSpeaking, setEmotion]
+    [setIsSpeaking, setEmotion, resetSpeakingState]
   );
 
   const speakWithBrowserSynthesis = (text: string, lang: string) => {
     if (!('speechSynthesis' in window)) {
-      setIsPlaying(false);
-      setIsSpeaking(false);
-      setEmotion('happy');
+      resetSpeakingState();
       return;
     }
 
@@ -93,15 +108,11 @@ export function useTTS() {
     if (enVoice) utterance.voice = enVoice;
 
     utterance.onend = () => {
-      setIsPlaying(false);
-      setIsSpeaking(false);
-      setEmotion('happy');
+      resetSpeakingState();
     };
 
     utterance.onerror = () => {
-      setIsPlaying(false);
-      setIsSpeaking(false);
-      setEmotion('happy');
+      resetSpeakingState();
     };
 
     window.speechSynthesis.speak(utterance);
@@ -114,11 +125,9 @@ export function useTTS() {
         audioRef.current.pause();
         audioRef.current.currentTime = 0;
       }
-      setIsPlaying(false);
-      setIsSpeaking(false);
-      setEmotion('happy');
+      resetSpeakingState();
     }
-  }, [setIsSpeaking, setEmotion]);
+  }, [resetSpeakingState]);
 
   return {
     isPlaying,

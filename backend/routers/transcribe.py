@@ -1,10 +1,11 @@
 from fastapi import APIRouter, File, UploadFile, HTTPException
+from typing import Optional
 from services.stt_service import transcribe_audio
 
 router = APIRouter(prefix='/api/transcribe', tags=['Speech-to-Text'])
 
 @router.post('')
-async def transcribe(file: UploadFile = File(...), language: str = 'en'):
+async def transcribe(file: UploadFile = File(...), language: Optional[str] = None):
     if not file.content_type or not file.content_type.startswith('audio/'):
         raise HTTPException(status_code=400, detail='Please upload an audio file.')
     audio_bytes = await file.read()

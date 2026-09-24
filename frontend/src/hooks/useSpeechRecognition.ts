@@ -12,7 +12,7 @@ interface UseSpeechRecognitionOptions {
 export function useSpeechRecognition({
   onResult,
   onWakeWord,
-  lang = 'en-US',
+  lang = 'id-ID',
 }: UseSpeechRecognitionOptions = {}) {
   const [isSupported, setIsSupported] = useState<boolean>(true);
   const [permissionStatus, setPermissionStatus] = useState<'prompt' | 'granted' | 'denied'>('prompt');
@@ -20,32 +20,26 @@ export function useSpeechRecognition({
   const [interimTranscript, setInterimTranscript] = useState<string>('');
   const recognitionRef = useRef<any>(null);
   const isManuallyStoppedRef = useRef<boolean>(false);
-  const isStartedRef = useRef<boolean>(false);
-  const restartTimerRef = useRef<any>(null);
+  const latestTranscriptRef = useRef<string>('');
 
   const {
+    isListening, // Reactive global state
     setIsListening,
     setEmotion,
   } = useAppStore();
 
-  // Request microphone permission explicitly via user action
-  const requestMicPermission = useCallback(async () => {
-    try {
-      if (typeof navigator !== 'undefined' && navigator.mediaDevices?.getUserMedia) {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        stream.getTracks().forEach((t) => t.stop());
-        setPermissionStatus('granted');
-        return true;
-      }
-      return false;
-    } catch (err: any) {
-      console.warn('[useSpeechRecognition] Mic permission denied:', err);
-      setPermissionStatus('denied');
-      return false;
-    }
-  }, []);
+  const onResultRef = useRef(onResult);
+  const onWakeWordRef = useRef(onWakeWord);
 
-  // Initialize Speech Recognition once
+  useEffect(() => {
+    onResultRef.current = onResult;
+  }, [onResult]);
+
+  useEffect(() => {
+    onWakeWordRef.current = onWakeWord;
+  }, [onWakeWord]);
+
+  // Initialize Speech Recognition
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
@@ -63,20 +57,18 @@ export function useSpeechRecognition({
     recognition.lang = lang;
 
     recognition.onstart = () => {
-      isStartedRef.current = true;
       setIsListening(true);
       setEmotion('listening');
       setPermissionStatus('granted');
     };
 
     recognition.onresult = (event: any) => {
-      // Don't capture when Arvi is actively speaking audio to prevent loopback
       if (useAppStore.getState().isSpeaking) return;
 
       let currentInterim = '';
       let finalTrans = '';
 
-      for (let i = event.resultIndex; i < event.results.length; i++) {
+      for (let i = 0; i < event.results.length; i++) {
         const item = event.results[i];
         if (item.isFinal) {
           finalTrans += item[0].transcript;
@@ -85,10 +77,12 @@ export function useSpeechRecognition({
         }
       }
 
+      const combined = (finalTrans + ' ' + currentInterim).trim();
+      latestTranscriptRef.current = combined;
+
       if (currentInterim) {
         setInterimTranscript(currentInterim);
         const interimLower = currentInterim.toLowerCase();
-        // Wake-word triggers
         if (
           interimLower.includes('hi arvi') ||
           interimLower.includes('hello arvi') ||
@@ -97,7 +91,7 @@ export function useSpeechRecognition({
           interimLower.includes('arvi') ||
           interimLower.includes('arbi')
         ) {
-          if (onWakeWord) onWakeWord();
+          if (onWakeWordRef.current) onWakeWordRef.current();
         }
       }
 
@@ -115,99 +109,83 @@ export function useSpeechRecognition({
           finalLower.includes('arvi') ||
           finalLower.includes('arbi');
 
-        if (hasWakeWord && onWakeWord) {
-          onWakeWord();
+        if (hasWakeWord && onWakeWordRef.current) {
+          onWakeWordRef.current();
         }
-
-        if (onResult) {
-          onResult(cleanFinal);
-        }
+        
+        // DO NOT call onResult here, it causes double firing. Wait for stopListening.
       }
     };
 
     recognition.onerror = (event: any) => {
       if (event.error === 'not-allowed') {
         setPermissionStatus('denied');
-        setIsListening(false);
-        isStartedRef.current = false;
-        setEmotion('happy');
-      } else if (event.error === 'no-speech') {
-        // Normal silence timeout; handled by onend auto-restart
-      } else {
-        console.warn('[SpeechRecognition] Status info:', event.error);
       }
+      setIsListening(false);
+      setEmotion('happy');
     };
 
     recognition.onend = () => {
-      isStartedRef.current = false;
       setIsListening(false);
-
-      // Auto-restart if wake-word is active and not manually stopped
-      const shouldKeepAlive = useAppStore.getState().isWakeWordActive && !isManuallyStoppedRef.current;
-      if (shouldKeepAlive) {
-        clearTimeout(restartTimerRef.current);
-        restartTimerRef.current = setTimeout(() => {
-          try {
-            if (!useAppStore.getState().isSpeaking && !isStartedRef.current) {
-              recognition.start();
-            }
-          } catch (e) {
-            // Already active or starting
-          }
-        }, 300);
-      } else {
-        setEmotion('happy');
-      }
     };
 
     recognitionRef.current = recognition;
     setIsSupported(true);
 
     return () => {
-      clearTimeout(restartTimerRef.current);
       try {
         recognition.stop();
       } catch (e) {}
     };
-  }, [lang, onResult, onWakeWord, setIsListening, setEmotion]);
+  }, [lang, setIsListening, setEmotion]);
 
   const startListening = useCallback(async () => {
     isManuallyStoppedRef.current = false;
-    const granted = await requestMicPermission();
-    if (!granted && permissionStatus === 'denied') return;
+    latestTranscriptRef.current = '';
+    setTranscript('');
+    setInterimTranscript('');
+    setIsListening(true);
+    setEmotion('listening');
 
-    if (recognitionRef.current && !isStartedRef.current) {
+    if (recognitionRef.current) {
       try {
-        setTranscript('');
-        setInterimTranscript('');
         recognitionRef.current.start();
       } catch (err) {
-        // May already be started
+        // Ignored if already started
       }
     }
-  }, [requestMicPermission, permissionStatus]);
+  }, [setIsListening, setEmotion]);
 
   const stopListening = useCallback(() => {
     isManuallyStoppedRef.current = true;
-    if (recognitionRef.current && isStartedRef.current) {
+    setIsListening(false);
+
+    if (recognitionRef.current) {
       try {
         recognitionRef.current.stop();
       } catch (err) {}
     }
-  }, []);
+
+    const captured = latestTranscriptRef.current.trim();
+    if (captured && onResultRef.current) {
+      onResultRef.current(captured);
+    }
+    latestTranscriptRef.current = '';
+    return captured;
+  }, [setIsListening]);
 
   const resetTranscript = useCallback(() => {
+    latestTranscriptRef.current = '';
     setTranscript('');
     setInterimTranscript('');
   }, []);
 
   return {
     isSupported,
-    isListening: isStartedRef.current,
+    isListening, // Now using global hook state
     permissionStatus,
     transcript,
     interimTranscript,
-    requestMicPermission,
     startListening,
     stopListening,
     resetTranscript,

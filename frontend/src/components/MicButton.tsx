@@ -16,10 +16,20 @@ export const MicButton: React.FC<MicButtonProps> = ({
   onStopListening,
   disabled = false,
 }) => {
-  const { isListening, isSpeaking } = useAppStore();
+  const { isListening, isSpeaking, setIsSpeaking, setEmotion } = useAppStore();
 
   const handleToggle = () => {
-    if (disabled || isSpeaking) return;
+    if (disabled) return;
+    
+    // If Arvi is currently speaking, clicking interrupts speech immediately
+    if (isSpeaking) {
+      if (typeof window !== 'undefined') window.speechSynthesis?.cancel();
+      setIsSpeaking(false);
+      setEmotion('listening');
+      onStartListening();
+      return;
+    }
+
     if (isListening) {
       onStopListening();
     } else {
@@ -51,14 +61,14 @@ export const MicButton: React.FC<MicButtonProps> = ({
           whileHover={{ scale: disabled ? 1 : 1.05 }}
           whileTap={{ scale: disabled ? 1 : 0.95 }}
           onClick={handleToggle}
-          disabled={disabled || isSpeaking}
-          className={`relative z-10 w-20 h-20 rounded-full flex items-center justify-center shadow-xl transition-all duration-300 border-4 border-white ${
+          disabled={disabled}
+          className={`relative z-10 w-20 h-20 rounded-full flex items-center justify-center shadow-xl transition-all duration-300 border-4 border-white cursor-pointer ${
             disabled
               ? 'bg-slate-300 cursor-not-allowed opacity-60'
               : isListening
               ? 'bg-gradient-to-tr from-emerald-500 to-teal-400 text-white shadow-emerald-300'
               : isSpeaking
-              ? 'bg-gradient-to-tr from-sky-500 to-indigo-500 text-white cursor-wait'
+              ? 'bg-gradient-to-tr from-sky-500 to-indigo-500 text-white hover:brightness-110'
               : 'bg-gradient-to-tr from-indigo-600 via-blue-500 to-cyan-400 text-white hover:shadow-indigo-300'
           }`}
         >
@@ -73,9 +83,9 @@ export const MicButton: React.FC<MicButtonProps> = ({
       </div>
 
       {/* Button Helper Text */}
-      <span className="text-xs font-bold text-slate-600 px-3 py-1 rounded-full bg-white/80 shadow-xs border border-slate-100">
+      <span className="text-xs font-bold text-slate-600 px-3 py-1 rounded-full bg-white/80 shadow-xs border border-slate-100 select-none">
         {isSpeaking
-          ? 'Arvi sedang berbicara...'
+          ? 'Arvi sedang berbicara... (Klik untuk menyela)'
           : isListening
           ? 'Mendengarkan... (Klik untuk selesai)'
           : 'Klik untuk Bicara dengan Arvi 🎙️'}

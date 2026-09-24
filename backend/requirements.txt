@@ -9,3 +9,4 @@ openai==3.16.0
 faster-whisper==1.2.1
 kokoro-onnx==0.6.1
 soundfile==0.14.0
+python-dotenv==1.0.1

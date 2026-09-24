@@ -7,6 +7,7 @@ import { ArviAvatar } from '@/components/ArviAvatar';
 import { MicButton } from '@/components/MicButton';
 import { AudioVisualizer } from '@/components/AudioVisualizer';
 import { CenterStageCard } from '@/components/CenterStageCard';
+import { useSpeechRecognition } from '@/hooks/useSpeechRecognition';
 import { useBackendTranscription } from '@/hooks/useBackendTranscription';
 import { useTTS } from '@/hooks/useTTS';
 import { useAudioVisualizer } from '@/hooks/useAudioVisualizer';
@@ -32,18 +33,10 @@ export default function JarvisUnifiedPage() {
     isWakeWordActive,
   } = useAppStore();
 
-  const {
-    isRecording: isBackendRecording,
-    isTranscribing,
-    interimText: backendInterimText,
-    startRecording,
-    stopRecording,
-    cancelRecording,
-  } = useBackendTranscription();
-
   const [inputMessage, setInputMessage] = useState<string>('');
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [isInitialized, setIsInitialized] = useState<boolean>(false);
+  const lastProcessedRef = React.useRef<{ text: string; timestamp: number }>({ text: '', timestamp: 0 });
   const [liveSubtitle, setLiveSubtitle] = useState<{ en: string; id: string }>({
     en: "Hi! I am Arvi, your English speaking partner. Say 'Hi Arvi' or click below!",
     id: "Halo! Aku Arvi, teman belajarmu. Panggil 'Hi Arvi' atau klik di bawah!",
@@ -54,9 +47,17 @@ export default function JarvisUnifiedPage() {
 
   // Command handler for voice and text input
   const processUserInput = async (text: string) => {
-    if (!text.trim() || isProcessing) return;
+    const cleanText = text.trim();
+    if (!cleanText || isProcessing) return;
 
-    const textLower = text.trim().toLowerCase();
+    // Deduplication check (prevents double firing within 1.2s)
+    const now = Date.now();
+    if (lastProcessedRef.current.text === cleanText && now - lastProcessedRef.current.timestamp < 1200) {
+      return;
+    }
+    lastProcessedRef.current = { text: cleanText, timestamp: now };
+
+    const textLower = cleanText.toLowerCase();
 
     // Check if user says close / selesai
     if (textLower === 'selesai' || textLower === 'tutup' || textLower === 'close' || textLower === 'back') {
@@ -69,12 +70,57 @@ export default function JarvisUnifiedPage() {
       return;
     }
 
-    // 1. Check if user is currently evaluating pronunciation for the active item
-    if (activeItem) {
+    // Check if user is asking a conversational question or greeting
+    const isConversationalIntent =
+      textLower.includes('siapa') ||
+      textLower.includes('apa kabar') ||
+      textLower.includes('bisa apa') ||
+      textLower.includes('how are you') ||
+      textLower.includes('who are you') ||
+      textLower.includes('hello') ||
+      textLower.includes('halo') ||
+      textLower.includes('hai') ||
+      textLower.includes('terima kasih') ||
+      textLower.includes('thank you') ||
+      textLower.includes('kamu suka') ||
+      textLower.includes('what is your') ||
+      textLower.includes('ceritakan');
+
+    // Check if user is asking to show or switch to a curriculum item (e.g. "show apple", "tampilkan gajah")
+    const matched = findCurriculumItem(cleanText);
+    const isShowIntent =
+      textLower.includes('show') ||
+      textLower.includes('tampilkan') ||
+      textLower.includes('tunjukkan') ||
+      textLower.includes('gambar') ||
+      textLower.includes('lihat') ||
+      textLower.includes('picture') ||
+      textLower.includes('what is') ||
+      textLower.includes('apa itu') ||
+      textLower.includes('mana') ||
+      textLower.includes('eja') ||
+      textLower.includes('spelling') ||
+      (matched && textLower.split(' ').length <= 2);
+
+    // If a show request is detected, switch/display the item immediately
+    if (matched && isShowIntent) {
+      setActiveItem(matched.item, matched.topic.name);
+      const replyEn = `Here is ${matched.item.word}! ${matched.item.example_en}`;
+      const replyId = `Ini dia ${matched.item.meaning_id} (${matched.item.word})! Ayo coba lafalkan bersama Arvi.`;
+
+      addChatMessage({ role: 'user', textEn: cleanText });
+      setLiveSubtitle({ en: replyEn, id: replyId });
+      addChatMessage({ role: 'arvi', textEn: replyEn, textId: replyId });
+      speakText(replyEn);
+      return;
+    }
+
+    // 1. If active item exists and user is NOT asking a conversational question or show request, evaluate pronunciation
+    if (activeItem && !isConversationalIntent) {
       setIsProcessing(true);
       setEmotion('thinking');
       try {
-        const evalRes = await evaluateSpeechApi(text, activeItem.word, gradeLevel);
+        const evalRes = await evaluateSpeechApi(cleanText, activeItem.word, gradeLevel);
         setEvaluationResult(evalRes);
 
         if (evalRes.accuracy_percent >= 80) {
@@ -105,33 +151,20 @@ export default function JarvisUnifiedPage() {
     // 2. Add to chat history
     addChatMessage({
       role: 'user',
-      textEn: text,
+      textEn: cleanText,
     });
     setInputMessage('');
     setIsProcessing(true);
     setEmotion('thinking');
 
     try {
-      // 3. Check direct curriculum match (e.g. "show apple", "singa", "cat")
-      const matched = findCurriculumItem(text);
-      if (matched && (textLower.includes('show') || textLower.includes('tampilkan') || textLower.includes('gambar') || textLower.split(' ').length <= 2)) {
-        setActiveItem(matched.item, matched.topic.name);
-        const replyEn = `Here is ${matched.item.word}! ${matched.item.example_en}`;
-        const replyId = `Ini dia ${matched.item.meaning_id} (${matched.item.word})! Coba ucapkan ya.`;
-
-        setLiveSubtitle({ en: replyEn, id: replyId });
-        addChatMessage({ role: 'arvi', textEn: replyEn, textId: replyId });
-        speakText(replyEn);
-        return;
-      }
-
       // 4. Call Chat API
       const historyPayload = chatMessages.slice(-6).map((m) => ({
         role: m.role === 'arvi' ? 'assistant' : 'user',
         content: m.textEn,
       }));
 
-      const response = await chatWithArviApi(text, gradeLevel, historyPayload);
+      const response = await chatWithArviApi(cleanText, gradeLevel, historyPayload);
 
       // If backend attached a display_item, move ARVI to corner and show on center stage
       if (response.display_item) {
@@ -162,19 +195,57 @@ export default function JarvisUnifiedPage() {
     }
   };
 
-  const permissionStatus: 'granted' | 'denied' | 'prompt' = isBackendRecording ? 'granted' : 'prompt';
-  const transcript = '';
-  const interimTranscript = backendInterimText;
-  const requestMicPermission = async () => {
-    await startRecording();
+  // Instant Web Speech Recognition (Real-time in browser)
+  const {
+    isSupported: isWebSpeechSupported,
+    interimTranscript: webSpeechInterim,
+    startListening: startWebSpeech,
+    stopListening: stopWebSpeech,
+  } = useSpeechRecognition({
+    lang: 'id-ID',
+    onResult: (resultText) => {
+      if (resultText && resultText.trim()) {
+        processUserInput(resultText.trim());
+      }
+    },
+    onWakeWord: () => {
+      speakText("Yes! I am listening.");
+    },
+  });
+
+  // Local Faster-Whisper Backend STT (Fallback)
+  const {
+    isTranscribing,
+    interimText: backendInterimText,
+    startRecording: startBackendRecording,
+    stopRecording: stopBackendRecording,
+  } = useBackendTranscription();
+
+  const handleStartListening = async () => {
     setIsInitialized(true);
+    if (isWebSpeechSupported) {
+      await startWebSpeech();
+    } else {
+      await startBackendRecording();
+    }
+  };
+
+  const handleStopListening = async () => {
+    if (isWebSpeechSupported) {
+      stopWebSpeech();
+      // processUserInput is called by onResult callback in useSpeechRecognition
+    } else {
+      const text = await stopBackendRecording();
+      if (text) await processUserInput(text);
+    }
   };
 
   const handleStartArvi = async () => {
     setIsInitialized(true);
-    await startRecording();
-    speakText("Hello! ARVI is ready. Hold the microphone button and speak to me.");
+    speakText("Hello! ARVI is ready. Click the microphone button and speak to me.");
   };
+
+  const currentInterimDisplay = webSpeechInterim || backendInterimText;
 
   const quickActionChips = [
     { label: '🍎 Tampilkan Apel', text: 'Show me an Apple' },
@@ -273,15 +344,15 @@ export default function JarvisUnifiedPage() {
           >
             {/* Real-time Subtitle & Voice Transcript */}
             <div className="w-full p-4 rounded-3xl bg-white/95 backdrop-blur-md shadow-xl border-2 border-indigo-100 flex flex-col items-center gap-1.5">
-              {interimTranscript ? (
+              {isTranscribing ? (
+                <div className="flex items-center gap-2 text-indigo-600 font-bold text-sm animate-pulse">
+                  <Bot className="w-4 h-4 text-indigo-500 animate-spin" />
+                  <span>Arvi sedang memproses suaramu... 🎙️</span>
+                </div>
+              ) : isListening ? (
                 <div className="flex items-center gap-2 text-emerald-600 font-black text-sm animate-pulse">
                   <Mic className="w-4 h-4 text-emerald-500" />
-                  <span>&ldquo;{interimTranscript}&rdquo;</span>
-                </div>
-              ) : isListening && transcript ? (
-                <div className="flex items-center gap-2 text-indigo-600 font-black text-sm">
-                  <Mic className="w-4 h-4 text-indigo-500" />
-                  <span>&ldquo;{transcript}&rdquo;</span>
+                  <span>&ldquo;{currentInterimDisplay || 'Mendengarkan... Silakan bicara'} &rdquo;</span>
                 </div>
               ) : (
                 <>
@@ -322,14 +393,8 @@ export default function JarvisUnifiedPage() {
         <div className="w-full flex items-center gap-3">
           {/* Main Push to Talk Button */}
           <MicButton
-            onStartListening={async () => {
-              setIsInitialized(true);
-              await startRecording();
-            }}
-            onStopListening={async () => {
-              const text = await stopRecording();
-              if (text) await processUserInput(text);
-            }}
+            onStartListening={handleStartListening}
+            onStopListening={handleStopListening}
             disabled={isProcessing || isTranscribing}
           />
 

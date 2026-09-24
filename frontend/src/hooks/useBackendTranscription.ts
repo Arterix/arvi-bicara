@@ -14,43 +14,71 @@ export function useBackendTranscription() {
   const chunksRef = useRef<Blob[]>([]);
   const streamRef = useRef<MediaStream | null>(null);
 
+  const { setIsListening, setEmotion } = useAppStore();
+
   const startRecording = useCallback(async () => {
-    setError(null);
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    streamRef.current = stream;
-    const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
-      ? 'audio/webm;codecs=opus'
-      : 'audio/webm';
-    const recorder = new MediaRecorder(stream, { mimeType });
-    chunksRef.current = [];
-    recorder.ondataavailable = (event) => {
-      if (event.data.size > 0) chunksRef.current.push(event.data);
-    };
-    recorder.start(250);
-    recorderRef.current = recorder;
-    setIsRecording(true);
-    setInterimText('Listening...');
-  }, []);
+    try {
+      setError(null);
+      if (typeof navigator === 'undefined' || !navigator.mediaDevices?.getUserMedia) {
+        throw new Error('Microphone not supported or permission denied in this browser.');
+      }
+
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      streamRef.current = stream;
+      const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
+        ? 'audio/webm;codecs=opus'
+        : 'audio/webm';
+      const recorder = new MediaRecorder(stream, { mimeType });
+      chunksRef.current = [];
+      recorder.ondataavailable = (event) => {
+        if (event.data.size > 0) chunksRef.current.push(event.data);
+      };
+      recorder.start(250);
+      recorderRef.current = recorder;
+      setIsRecording(true);
+      setIsListening(true);
+      setEmotion('listening');
+      setInterimText('Mendengarkan suara...');
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Gagal mengakses mikrofon';
+      console.error('[useBackendTranscription] Mic error:', err);
+      setError(message);
+      setIsListening(false);
+      setEmotion('happy');
+    }
+  }, [setIsListening, setEmotion]);
 
   const stopRecording = useCallback(async () => {
     const recorder = recorderRef.current;
-    if (!recorder) return '';
+    if (!recorder) {
+      setIsListening(false);
+      setIsRecording(false);
+      return '';
+    }
+
+    setIsListening(false);
+    setIsRecording(false);
+    setEmotion('thinking');
 
     const blob = await new Promise<Blob>((resolve) => {
       recorder.onstop = () => resolve(new Blob(chunksRef.current, { type: recorder.mimeType }));
-      recorder.stop();
+      try {
+        recorder.stop();
+      } catch (e) {
+        resolve(new Blob(chunksRef.current, { type: 'audio/webm' }));
+      }
     });
+
     streamRef.current?.getTracks().forEach((track) => track.stop());
     recorderRef.current = null;
     streamRef.current = null;
-    setIsRecording(false);
     setInterimText('');
     setIsTranscribing(true);
 
     try {
       const formData = new FormData();
       formData.append('file', blob, 'arvi-recording.webm');
-      const response = await fetch(`${API_BASE_URL}/api/transcribe?language=en`, {
+      const response = await fetch(`${API_BASE_URL}/api/transcribe`, {
         method: 'POST',
         body: formData,
       });
@@ -64,17 +92,21 @@ export function useBackendTranscription() {
     } finally {
       setIsTranscribing(false);
     }
-  }, []);
+  }, [setIsListening, setEmotion]);
 
   const cancelRecording = useCallback(() => {
-    recorderRef.current?.stop();
+    try {
+      recorderRef.current?.stop();
+    } catch (e) {}
     streamRef.current?.getTracks().forEach((track) => track.stop());
     recorderRef.current = null;
     streamRef.current = null;
     chunksRef.current = [];
     setIsRecording(false);
+    setIsListening(false);
+    setEmotion('happy');
     setInterimText('');
-  }, []);
+  }, [setIsListening, setEmotion]);
 
   return { isRecording, isTranscribing, interimText, error, startRecording, stopRecording, cancelRecording };
 }

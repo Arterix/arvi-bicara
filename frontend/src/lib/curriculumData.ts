@@ -870,19 +870,60 @@ export const CURRICULUM_DATA: { topics: CurriculumTopic[] } = {
   ]
 };
 
-// Helper: search any item in the curriculum by word or ID
+// Helper: search any item in the curriculum by word, phrase, or Indonesian meaning
 export function findCurriculumItem(query: string) {
-  const clean = query.trim().toLowerCase();
+  if (!query || !query.trim()) return null;
+
+  const normalized = query.toLowerCase().replace(/[.,!?:;'"_]/g, ' ').trim();
+  const tokens = normalized.split(/\s+/).filter(Boolean);
+
+  // 1. Exact word / ID check
   for (const topic of CURRICULUM_DATA.topics) {
     for (const item of topic.items) {
+      const itemWordLower = item.word.toLowerCase();
+      const itemIdLower = item.id.toLowerCase().replace(/_/g, ' ');
+
+      // Multi-word phrase match (e.g. "good morning", "thank you")
       if (
-        item.word.toLowerCase() === clean ||
-        item.id.toLowerCase() === clean ||
-        item.meaning_id.toLowerCase().includes(clean)
+        (itemWordLower.includes(' ') && normalized.includes(itemWordLower)) ||
+        (itemIdLower.includes(' ') && normalized.includes(itemIdLower))
       ) {
+        return { item, topic };
+      }
+
+      // Single word token equality
+      if (tokens.includes(itemWordLower) || tokens.includes(item.id.toLowerCase())) {
         return { item, topic };
       }
     }
   }
+
+  // 2. Indonesian meaning & keyword extraction match
+  for (const topic of CURRICULUM_DATA.topics) {
+    for (const item of topic.items) {
+      const meaningRaw = item.meaning_id.toLowerCase();
+      const meaningClean = meaningRaw.replace(/[()\/]/g, ' ');
+      const meaningWords = meaningClean.split(/\s+/).filter((w) => w.length >= 3);
+
+      for (const mw of meaningWords) {
+        if (tokens.includes(mw)) {
+          return { item, topic };
+        }
+      }
+
+      // Multi-word meaning (e.g. "selamat pagi", "merah muda")
+      const phrases = meaningRaw
+        .split(/[/()]/)
+        .map((p) => p.trim())
+        .filter((p) => p.includes(' ') && p.length >= 4);
+
+      for (const phrase of phrases) {
+        if (normalized.includes(phrase)) {
+          return { item, topic };
+        }
+      }
+    }
+  }
+
   return null;
 }
